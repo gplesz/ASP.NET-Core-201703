@@ -6,6 +6,7 @@ Az ASP.NET Core NetAcademia tanfolyam kódtár kiegészítése
 - Minimum windows version [itt](https://msdn.microsoft.com/en-us/commandline/wsl/install_guide)
 - Windows Developer Mode
 - install linux subsystem 
+- ugyanez parancssorból [itt](http://superuser.com/a/1065579/391048)
 - run Bash
 - set default language to en-us [itt](http://superuser.com/a/1108092/391048)
 - upgrade git [innen](http://unix.stackexchange.com/a/170831)
