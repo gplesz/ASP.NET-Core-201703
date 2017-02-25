@@ -14,7 +14,7 @@ Az ASP.NET Core NetAcademia tanfolyam kódtár kiegészítése
 - [fish shell](http://fishshell.com/) ([github](https://github.com/oh-my-fish/oh-my-fish)) telepítése [így](https://www.hanselman.com/blog/InstallingFishShellOnUbuntuOnWindows10.aspx)
 - ubuntu mono font telepítése [innen](http://font.ubuntu.com/)
 - generating ssh key [innen](https://help.github.com/articles/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent/#platform-linux)
-- az ssh kulcs felvitele a github oldalon
+- az ssh kulcs felvitele a github oldalon [így](https://help.github.com/articles/adding-a-new-ssh-key-to-your-github-account/)
 - ehhez az ssh kulcs: **cat ~/.ssh/id_rsa.pub**
 - .NET Core telepítés [innen](https://www.microsoft.com/net/core#linuxubuntu), UBUNTU 14.04-re (verziószám: [**lsb_release -a**](https://help.ubuntu.com/community/CheckingYourUbuntuVersion))
 - **cd ASP.NET-Core-201703\ASPNETCore\src\ASPNETCore**
