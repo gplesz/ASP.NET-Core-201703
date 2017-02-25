@@ -21,7 +21,7 @@ Az ASP.NET Core NetAcademia tanfolyam kódtár kiegészítése
 - **dotnet run**
 - The specified framework 'Microsoft.NETCore.App', version '1.0.0' was not found. ([Hanselmann](https://www.hanselman.com/blog/TheMysteryOfDotnetWatchAndMicrosoftNETCoreAppVersion110preview100110000WasNotFound.aspx))
 - átírtam a verziószámot 1.1-re, majd újrafuttattam: Error -98 EADDRINUSE address already in use
-- konfiguráltam, hogy milyen portokon figyeljen, majd **sudo**-val elindítottam:
+- konfiguráltam, hogy milyen portokon figyeljen, majd **sudo**-val elindítottam ([Oleg](http://stackoverflow.com/questions/34212765/how-do-i-get-the-kestrel-web-server-to-listen-to-non-localhost-requests)):
 ```
 [~/A/A/s/ASPNETCore.WU]─[⎇ master]─(130)-> sudo dotnet run
 Project ASPNETCore.WU (.NETCoreApp,Version=v1.0) was previously compiled. Skipping compilation.
