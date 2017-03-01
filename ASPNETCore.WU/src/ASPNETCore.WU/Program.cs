@@ -20,7 +20,7 @@ namespace ASPNETCore.WU
                     .Build();
 
             var host = new WebHostBuilder()
-                .UseUrls("http://*:1000", "https://*:1234", "http://0.0.0.0:5000")
+                .UseUrls("http://*:1000")
                 .UseConfiguration(config)
                 .UseKestrel()
                 .UseContentRoot(Directory.GetCurrentDirectory())
