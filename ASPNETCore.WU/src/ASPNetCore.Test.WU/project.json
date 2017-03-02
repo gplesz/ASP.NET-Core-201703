@@ -8,7 +8,7 @@
     "FubarCoder.RestSharp.Portable.HttpClient": "4.0.7",
     "Microsoft.NETCore.App": {
       "type": "platform",
-      "version": "1.1.0"
+      "version": "1.0.0"
     }
   },
 
