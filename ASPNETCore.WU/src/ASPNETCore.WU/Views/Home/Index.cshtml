@@ -1,0 +1,9 @@
+﻿@using ASPNETCore.WU.Models
+@model IEnumerable<CourseModel>
+
+@foreach (var course in Model)
+{
+    <div>
+        <h2>@course.Name</h2>
+    </div>
+}

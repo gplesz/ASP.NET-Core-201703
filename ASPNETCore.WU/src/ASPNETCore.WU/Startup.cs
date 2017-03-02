@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using ASPNETCore.WU.Repositories;
 
 namespace ASPNETCore.WU
 {
@@ -16,6 +17,10 @@ namespace ASPNETCore.WU
         // For more information on how to configure your application, visit http://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
+
+            services.AddTransient<ICourseRepository, CourseMockRepository>();
+            //Ahhoz, hogy MVC-nk legyen, kell egy ilyen
+            services.AddMvc();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -32,10 +37,30 @@ namespace ASPNETCore.WU
                 app.UseExceptionHandler();
             }
 
-            app.Run(async (context) =>
-            {
-                await context.Response.WriteAsync("Hello World!");
-            });
+
+
+            //app.Run(async (context) =>
+            //{
+            //    await context.Response.WriteAsync("Hello World!");
+            //});
+
+
+            //app.UseMvc( 
+            //    config=> {
+            //        config.MapRoute(
+            //            name: "Default", 
+            //            template: "{controller}/{action}/{id?}", 
+            //            defaults: new {
+            //                controller = "Home",
+            //                action = "Index"
+            //        });
+            //    }
+            //);
+
+            app.UseStatusCodePages(); //Adds a StatusCodePages middleware with a default response handler that checks for responses with status codes between 400 and 599 that do not have a body.
+            app.UseStaticFiles(); //Enables static file serving for the current request path
+
+            app.UseMvcWithDefaultRoute();
         }
     }
 }
