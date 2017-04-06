@@ -57,4 +57,5 @@ Now listening on: http://0.0.0.0:5000
 Application started. Press Ctrl+C to shut down.
 ```
 
-
+## global.json
+"projects": [ "src", "test" ],

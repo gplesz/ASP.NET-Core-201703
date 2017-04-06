@@ -15,6 +15,7 @@ namespace ASPNETCore.WU
             var config = new ConfigurationBuilder()
                     .SetBasePath(Directory.GetCurrentDirectory())
                     .AddJsonFile("hosting.json", optional: true)
+                    .AddJsonFile("appsettings.json", optional: true)
                     .AddEnvironmentVariables(prefix: "ASPNETCORE_")
                     .AddCommandLine(args)
                     .Build();

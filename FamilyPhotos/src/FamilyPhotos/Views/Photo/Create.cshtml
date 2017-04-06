@@ -1,22 +1,30 @@
-﻿@model FamilyPhotos.Models.PhotoModel
+﻿
+@model FamilyPhotos.ViewModel.PhotoViewModel
 
 <h2>Új kép létrehozása</h2>
 
-@using (Html.BeginForm("Create", "Photo", FormMethod.Post, new { enctype = "multipart/form-data"}))
+@using (Html.BeginForm("Create", "Photo", FormMethod.Post, new { enctype = "multipart/form-data" }))
 {
-<div>
-    @Html.LabelFor(m => m.Title)
-    @Html.EditorFor(m=>m.Title)
-</div>
-<div>
-    @Html.LabelFor(m => m.Description)
-    @Html.EditorFor(m => m.Description)
-</div>
-<div>
-    @Html.LabelFor(m=>m.Picture)
-    <input type="file" name="PictureFromBrowser" />
-</div>
-<div>
-    <input type="submit" value="Létrehozás" />
-</div>
+    <div>
+        @Html.ValidationSummary()
+    </div>
+    <div>
+        @Html.LabelFor(m => m.Title)
+        @Html.EditorFor(m => m.Title)
+        @Html.ValidationMessageFor(m => m.Title)
+        @*<span asp-validation-for="Email"></span>*@
+    </div>
+    <div>
+        @Html.LabelFor(m => m.Description)
+        @Html.EditorFor(m => m.Description)
+        @Html.ValidationMessageFor(m => m.Description)
+    </div>
+    <div>
+        @Html.LabelFor(m => m.PictureFromBrowser)
+        <input type="file" name="PictureFromBrowser" />
+        @Html.ValidationMessageFor(m => m.PictureFromBrowser)
+    </div>
+    <div>
+        <input type="submit" value="Létrehozás" />
+    </div>
 }
