@@ -27,6 +27,13 @@ namespace FamilyPhotos
             var mapper = amCfg.CreateMapper();
             services.AddSingleton(mapper);
 
+            services.AddElm(
+                opts =>
+                {
+                    //opts.Path = new PathString("/elm");
+                    opts.Filter = (name, level) => level >= LogLevel.Trace;
+                });
+
             services.AddMvc();
         }
 
@@ -39,7 +46,8 @@ namespace FamilyPhotos
             {
                 app.UseDeveloperExceptionPage();
             }
-
+            app.UseElmPage();
+            app.UseElmCapture();
             app.UseMvcWithDefaultRoute();
         }
     }
