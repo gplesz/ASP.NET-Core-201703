@@ -1,0 +1,136 @@
+@model IEnumerable<FamilyPhotosWithIdentity.Models.AdminViewModels.IndexViewModel>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h2>Index</h2>
+
+<a asp-action="Create" class="btn btn-default" data-toggle="modal" data-target="#popupModal" data-remote="false">Create New</a>
+<table id="table_roles" class="display">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Id)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody></tbody>
+</table>
+
+<div class="modal fade" id="popupModal" role="dialog" aria-hidden="true" aria-labelledby="popupModalLabel">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title" id="popupModalLabel"><span class="glyphicon glyphicon-certificate"></span> Create new role</h4>
+            </div>
+            <div class="modal-body" id="popupModalBody">
+            </div>
+            <div class="modal-footer">
+                <button type="submit" 
+                        class="btn btn-default btn-default pull-left"
+                        data-dismiss="modal">
+                    <span class="glyphicon glyphicon-remove"></span> Cancel
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section styles {
+    <environment names="Development">
+        <link rel="stylesheet" type="text/css" href="~/lib/datatables/media/css/jquery.dataTables.css" />
+        <link rel="stylesheet" type="text/css" href="~/lib/datatables/media/css/dataTables.bootstrap.css" />
+    </environment>
+    <environment names="Staging,Production">
+        <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.11/css/jquery.dataTables.min.css" />
+        <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.11/css/dataTables.bootstrap.min.css" />
+    </environment>
+    @*<style>
+        span.field-validation-error {
+            color: red;
+        }
+    </style>*@
+}
+
+@section scripts{
+    <script type="text/javascript" src="~/lib/jquery-validation/dist/jquery.validate.js"></script>
+    <script type="text/javascript" src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js"></script>
+
+    @*http://www.davepaquette.com/archive/2015/05/06/link-and-script-tag-helpers-in-mvc6.aspx*@
+    <environment names="Development">
+        <script src="~/lib/datatables/media/js/jquery.dataTables.js"></script>
+    </environment>
+    <environment names="Staging,Production">
+        <script type="text/javascript" src="https://cdn.datatables.net/1.10.11/js/jquery.dataTables.min.js"
+                asp-fallback-src="~/lib/datatables/media/js/jquery.dataTables.js"
+                asp-fallback-test="window.jQuery && window.jQuery.fn && jQuery.fn.dataTable"></script>
+    </environment>
+    <script src="~/lib/datatables/media/js/dataTables.bootstrap.js"></script>
+    @*<script type="text/javascript" src="~/lib/jquery/dist/"></script>*@
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            var table = $("#table_roles").DataTable({
+                serverSide: true,
+                processing: true,
+                //pagingType: "full_numbers",
+                order: [[1, "desc"]],
+                ajax: {
+                    url: "@Url.Action("Get", "Admin")",
+                    type: "GET"
+                },
+                columns: [
+                    {
+                        data: "id",
+                        title: "@Html.DisplayNameFor(model => model.Id)",
+                        sortable: false, searchable: false, visible: false
+                    },
+                    {
+                        data: "name",
+                        title: "@Html.DisplayNameFor(model => model.Name)"
+                    },
+                    {
+                        data: "id",
+                        sortable: false, searchable: false,
+                        render: function (data) {
+                            return "<a href=\"@Url.Action("Modify", "Admin")?Id=" + data + "\" class=\"btn btn-default\" data-toggle=\"modal\" data-target=\"#popupModal\" data-remote=\"false\">Modify</a>" +
+                                "<a href=\"@Url.Action("Delete", "Admin")?Id=" + data + "\" class=\"btn btn-default\" data-toggle=\"modal\" data-target=\"#popupModal\" data-remote=\"false\">Delete</a>"
+                        }
+                    },
+                ]
+            });
+            $("#popupModal").on("show.bs.modal", function (e) {
+                var link = $(e.relatedTarget);
+                //$(this).find(".modal-body").load(link.attr("href"));
+                $("#popupModalBody").load(link.attr("href"));
+
+                $("#popupModal").on("submit", "#popupForm", function (e) {
+                    var url = $('#popupForm')[0].action;
+                    $.ajax({
+                        type: "POST",
+                        url: url,
+                        data: $("#popupForm").serialize(),
+                        success: function (data) {
+                            if (data.status) {
+                                $("#popupModal").modal("hide");
+                                table.ajax.reload();
+                            } else {
+                                $("#popupModalBody").html(data);
+                            }
+                        }
+                    })
+
+                    e.preventDefault();
+                })
+
+            });
+        });
+    </script>
+}

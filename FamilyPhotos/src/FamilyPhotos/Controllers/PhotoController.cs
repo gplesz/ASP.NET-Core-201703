@@ -11,6 +11,8 @@ using System.Threading.Tasks;
 
 namespace FamilyPhotos.Controllers
 {
+    [FamilyPhotos.Filters.MyExceptionFilter2(2)] //Ha a ExceptionFilterAttribute-ot származtatjuk le,
+    [FamilyPhotos.Filters.MyExceptionFilter3(Order=1)] // akkor nem kell sokat implementálni
     public class PhotoController : Controller
     {
         private readonly PhotoRepository repository;
@@ -18,6 +20,10 @@ namespace FamilyPhotos.Controllers
         private readonly ILogger<PhotoController> logger;
 
         public PhotoController(PhotoRepository repository, IMapper mapper,
+            //Ha így vesszük át a naplózó osztályt, akkor a DI 
+            //kitöltö nekünk a kategóriát automatikusan
+            //+az egész típusos, és nem string-et írunk
+            //különben így kéne: logger.CreateLogger("FamilyPhotos.Controllers.PhotoController")
             ILogger<PhotoController> logger)
         {
             if (repository == null)
@@ -85,6 +91,56 @@ namespace FamilyPhotos.Controllers
             return View(pics);
         }
 
+        public IActionResult Details(int id)
+        {
+            logger.LogDebug("Valaki a Details-t hívta ezzel a paraméterrel: {0}", id);
+
+            var model = repository.GetPicture(id);
+
+            var viewModel = mapper.Map<PhotoViewModel>(model);
+
+            return View(viewModel);
+        }
+
+        [HttpGet]
+        public IActionResult Edit(int id)
+        {
+            logger.LogInformation("Kép módosítás kezdődik: {0}", id);
+
+            var model = repository.GetPicture(id);
+            var viewModel = mapper.Map<PhotoViewModel>(model);
+            return View(viewModel);
+        }
+
+        [HttpPost]
+        public IActionResult Edit(PhotoViewModel viewModel)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(viewModel);
+            }
+
+            var model = mapper.Map<PhotoModel>(viewModel);
+            repository.UpdatePhoto(model);
+
+            return RedirectToAction("Index");
+        }
+
+        [HttpGet]
+        public IActionResult Delete(int id)
+        {
+            var model = repository.GetPicture(id);
+            var viewModel = mapper.Map<PhotoViewModel>(model);
+            return View(viewModel);
+        }
+
+        [HttpPost]
+        public IActionResult Delete(PhotoViewModel viewModel)
+        {
+            repository.DeletePhoto(viewModel.Id);
+            return RedirectToAction("Index");
+        }
+
         public FileContentResult GetImage(int photoId)
         {
             var pic = repository.GetPicture(photoId);
@@ -108,37 +164,70 @@ namespace FamilyPhotos.Controllers
         //public IActionResult Create(string Title, string Description)
         public IActionResult Create(PhotoViewModel viewModel) //Itt az MVC modelbindere a bejövő paramétereket egyezteti a várt osztály propertyjeivel és ki is tölti
         {
-            //Ha a kontroller action model-t fogad, KÖTELEZŐ ellenőrizni a 
-            //ModelState-et
 
-            //nagyon kezdetleges Adatvalidálás, ezt majd jól meg fogjuk haladni!
-            //hiányzik még pár dolog, csak DEMO
 
-            if (!ModelState.IsValid
-                || viewModel.PictureFromBrowser == null || viewModel.PictureFromBrowser.Length == 0)
+            //Azon a Controller/Action-ön, ami model-t fogad, kötelező a validálás és eredményének az ellenőrzése
+            //méghozzá a ModelState állapotának ellenőrzése, itt jelenik meg a validálás végeredménye
+            //+ha tudjuk, akkor ValidationAttrubute-okon keresztül ellenőrizzünk
+
+            if (!ModelState.IsValid)
             {
+                //A View-t fel kell készíteni a hibainformációk
+                //megjelenítésére
                 return View(viewModel);
             }
 
+            //több profile betöltése
+            //var autoMapperCfg = new AutoMapper.MapperConfiguration(
+            //    cfg =>
+            //    {
+            //        cfg.AddProfile(new PhotoProfile());
+            //        cfg.AddProfile(new PhotoProfile());
+            //        cfg.AddProfile(new PhotoProfile());
+            //        cfg.AddProfile(new PhotoProfile());
+            //        cfg.AddProfile(new PhotoProfile());
+            //    });
+            
+
+            //El kell végezni a ViewModel=>Model transzformációt
+            ////////////////////////////////////////////////////
             var model = mapper.Map<PhotoModel>(viewModel);
 
             repository.AddPhoto(model);
-            //return View(viewModel);
+
+            //A kép elmentése után térjen vissza az Index oldalra
             return RedirectToAction("Index");
         }
 
-        public IActionResult Exception()
+        //példakód a StatusCodePage megoldásokhoz
+        public IActionResult EzEgyHibasKod()
         {
-            throw new System.Exception("Ez egy példa arra, hogy elszáll a rendszer");
+            try
+            {
+                //innentől a UseStatusCodePages nem szereplő
+                throw new Exception("Itt is van a hiba");
+            }
+            catch (Exception)
+            {
+                //ha lekezeljük a hibát, és csak a végeredményt jelezzük
+                //akkor a StatusCodePage megjelenik a felhasználónál
+                return StatusCode(500);
+            }
+        }
+
+        public IActionResult EzEgyKivetel()
+        {
+            throw new Exception("Itt is van a hiba"); //Ezt a Startup.cs-ben beállított ExceptionHandler segít lekezelni.
+
             //try
             //{
-            //    throw new System.Exception("Ez egy példa arra, hogy elszáll a rendszer");
+            //    throw new Exception("Itt is van a hiba");
             //}
-            //catch (Exception)
+            //catch (Exception ex)
             //{
-            //    return StatusCode(500);
+            //    return RedirectToAction("Kivetel", "Errors");
             //}
-
         }
+
     }
 }

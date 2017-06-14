@@ -4,71 +4,37 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-/// <summary>
-/// Filterek
-/// https://docs.microsoft.com/en-us/aspnet/core/mvc/controllers/filters
-///                                |                    |
-///                              *Authorization Filters |
-///                                |                    |
-///                                |             -->-----      
-///                                |             |      
-///                              *Resource Filters
-///                                |             |
-///                                |             ---<----
-///                                |                    |
-///                               Model Binding         |
-///                                |                    |
-///                                |                    |
-/// Action execution ----------<-*Action Filters        |
-///                |                                    |
-/// Action Result Conversation->- *Action Filters       |
-///                                |                    |
-///                              *Exception filters     |
-///                                |                    |
-///                                |                    |
-///                              *Result filters        |
-///                                |                    |
-///                                |                    |
-///                               Result execution--->---
-///           
-/// 
-/// Exception filters handle unhandled exceptions that occur in 
-/// controller creation, 
-/// model binding, 
-/// action filters, 
-/// or action methods. 
-/// 
-/// They won't catch exceptions that occur in 
-/// 
-/// Resource filters, 
-/// Result filters, or 
-/// MVC Result execution.
-/// 
-/// Exception filters are good for trapping exceptions that occur within MVC actions, 
-/// but they're not as flexible as error handling middleware. Prefer middleware for 
-/// the general case, and use filters only where you need to do error handling 
-/// differently based on which MVC action was chosen.
-/// </summary>
-
 namespace FamilyPhotos.Filters
 {
-    public class MyExceptionFilter : ExceptionFilterAttribute
+    //https://docs.microsoft.com/en-us/aspnet/core/mvc/controllers/filters
+    public class MyExceptionFilter : IExceptionFilter //Ilyenkor nem tudjuk attributumként használni
     {
+        public void OnException(ExceptionContext context)
+        {
+            //Ha szeretnénk, akkor itt a kivételeket el tudjuk menteni
+
+            //ezzel pedig a teljes hibakezelést megállítjuk itt
+            //context.ExceptionHandled = true;
+        }
+    }
+
+    public class MyExceptionFilter2 : ExceptionFilterAttribute
+    {
+        //Ezzel meghatározhatjuk a sorrendjét a filter végrehajtásnak
+        public MyExceptionFilter2(int Order) 
+        {
+            base.Order = Order;
+        }
         public override void OnException(ExceptionContext context)
         {
+            //elmentjük a részleteket
 
-            
             base.OnException(context);
         }
     }
 
-
-    public class MyExceptionFilter2 : IExceptionFilter
-    {
-        public void OnException(ExceptionContext context)
-        {
-            context.ExceptionHandled = true;
-            throw new NotImplementedException();
-        }
+    public class MyExceptionFilter3 : ExceptionFilterAttribute
+    { //Az Order így is implementálva van, csak máshogy kell hívni
     }
+
 }

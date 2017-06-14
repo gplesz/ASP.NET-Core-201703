@@ -40,9 +40,13 @@ namespace FamilyPhotos
                 .UseKestrel()
                 .UseContentRoot(Directory.GetCurrentDirectory())
                 .UseIISIntegration()
-                //https://docs.microsoft.com/en-us/aspnet/core/fundamentals/hosting#configuring-a-host
-                //.CaptureStartupErrors(true) //ha false, hiba esetén a host kilép. Ha true, akkor minden hibát rögzít, megpróbál elindulni és ad egy hibalapot 
-                //.UseSettings("detailedErrors", "true") //alapértelmezetten false. Ha ez true, vagy delepoment settings van, akkor részletes információt ad a startup.cs hibáiról
+                //Az indulás közben történő hibakezelés
+                //a hibák rögzítését így lehet elindítani:
+                //ilyenkor az alkalmazás meggpróbál elindulni,
+                //és a hibaüzenet oldalt megjeleníteni
+                .CaptureStartupErrors(true) //alapértelmezésben false, kivéve a Development környezetet
+                //Ahhoz, hogy részletes hibaüzenetet kapjunk, ezt is be kell állítani
+                .UseSetting("detailedErrors","true") //alapértelmezésben false, kivéve a Development környezetet
                 .UseStartup<Startup>()
                 .Build();
 

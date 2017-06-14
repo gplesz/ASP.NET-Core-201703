@@ -1,0 +1,22 @@
+@model FamilyPhotosWithIdentity.Models.AdminViewModels.CreateRoleViewModel
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<form asp-controller="Admin" asp-action="Create" method="post" class="form-horizontal" id="popupForm" role="form">
+    <div asp-validation-summary="All" class="text-danger"></div>
+
+    <div class="form-group">
+        <label asp-for="RoleName" class="col-md-2 control-label"></label>
+        <div class="col-md-10">
+            <input asp-for="RoleName" class="form-control" />
+            <span asp-validation-for="RoleName" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <button type="submit" class="btn btn-default">Create role</button>
+        </div>
+    </div>
+</form>
