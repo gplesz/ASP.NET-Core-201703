@@ -59,3 +59,10 @@ Application started. Press Ctrl+C to shut down.
 
 ## global.json
 "projects": [ "src", "test" ],
+
+
+docker for windows
+https://www.docker.com/docker-windows
+
+C:\Users\admin\AppData\Local\lxss\home\gplesz
+.bashrc
